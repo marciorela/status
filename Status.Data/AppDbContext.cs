@@ -5,7 +5,7 @@ using System;
 
 namespace Status.Data
 {
-    public class AppContext : DbContext
+    public class AppDbContext : DbContext
     {
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Porta> PortasServidor { get; set; }

@@ -14,6 +14,8 @@ namespace Status.Domain.Entities
         [StringLength(100)]
         public string Host { get; set; }
 
+        //public string Descricao { get; set; }
+
         [Required]
         public int CheckInterval { get; set; }
 

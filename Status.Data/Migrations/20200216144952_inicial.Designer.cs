@@ -8,7 +8,7 @@ using Status.Data;
 
 namespace Status.Data.Migrations
 {
-    [DbContext(typeof(AppContext))]
+    [DbContext(typeof(AppDbContext))]
     [Migration("20200216144952_inicial")]
     partial class inicial
     {
