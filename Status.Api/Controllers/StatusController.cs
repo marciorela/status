@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Status.Api.ResultAPI;
 using Status.Data.Repositories;
 using Status.Domain.Entities;
 
@@ -26,12 +25,6 @@ namespace Status.Api.Controllers
         {
             _logger = logger;
             _serverRepo = serverRepo;
-        }
-
-        [HttpGet("GetServers")]
-        public async Task<IEnumerable<Servidor>> GetServers(Guid idUser)
-        {
-            return await _serverRepo.ListByUserAsync(idUser);
         }
 
         //public IEnumerable<WeatherForecast> GetServers()

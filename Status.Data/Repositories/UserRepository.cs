@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using Status.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +12,11 @@ namespace Status.Data.Repositories
     {
         public UserRepository(AppDbContext ctx) : base(ctx)
         {
+        }
+
+        public async Task<Usuario> GetByEmailAsync(string email)
+        {
+            return await ctx.Usuarios.Where(u => u.Email == email).FirstOrDefaultAsync();
         }
     }
 }

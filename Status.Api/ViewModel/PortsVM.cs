@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Status.Api.ResultAPI
+namespace Status.Api.ViewModel
 {
-    public class ServersPortsResult
+    public class PortsVM
     {
         public int PortNumber { get; set; }
     }
