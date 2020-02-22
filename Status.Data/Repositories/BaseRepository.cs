@@ -16,7 +16,7 @@ namespace Status.Data.Repositories
             this.ctx = ctx;
         }
 
-        public async Task Add(BaseEntity entity)
+        public async Task<Guid> Add(BaseEntity entity)
         {
             if (entity.Id == null)
             {
@@ -25,6 +25,8 @@ namespace Status.Data.Repositories
 
             await ctx.AddAsync(entity);
             await ctx.SaveChangesAsync();
+
+            return entity.Id;
         }
 
         public async Task Update(BaseEntity entity)

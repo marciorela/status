@@ -16,18 +16,18 @@ namespace Status.Api.Controllers
     public class ServersController : ControllerBase
     {
         private readonly ILogger<ServersController> logger;
-        private readonly ServerRepository serverRepo;
+        private readonly ServerRepository _serverRepo;
 
         public ServersController(ILogger<ServersController> logger, ServerRepository serverRepo)
         {
             this.logger = logger;
-            this.serverRepo = serverRepo;
+            this._serverRepo = serverRepo;
         }
-        
+
         [HttpGet("v1/List")]
         public async Task<IEnumerable<Servidor>> List(Guid user)
         {
-            return await serverRepo.ListByUserAsync(user);
+            return await _serverRepo.ListByUserAsync(user);
         }
 
         [HttpPost("v1/Add")]
@@ -36,19 +36,30 @@ namespace Status.Api.Controllers
 
             try
             {
-                await serverRepo.Add(new Servidor
+                if (!await _serverRepo.Exists(server.UsuarioId, server.Host))
                 {
-                    UsuarioId = server.UsuarioId,
-                    Host = server.Host,
-                    CheckInterval = server.CheckInterval
-                });
+
+                    var novoServidor = new Servidor
+                    {
+                        UsuarioId = server.UsuarioId,
+                        Host = server.Host,
+                        CheckInterval = server.CheckInterval
+                    };
+
+                    await _serverRepo.Add(novoServidor);
+
+                    return Ok(new ReturnIdVM { Id = novoServidor.Id });
+                }
+                else
+                {
+                    return BadRequest(new ReturnErrorVM { ErrorMessage = "Host já cadastrado." });
+                }
             }
             catch (Exception e)
             {
-                return BadRequest(e.Message); // "Ocorreu um erro incluindo o servidor.");
+                return BadRequest(new ReturnErrorVM { ErrorMessage = $"Ocorreu um erro inesperado: {e.Message}" });
             }
 
-            return Ok();
         }
     }
 }

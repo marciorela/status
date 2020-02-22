@@ -25,5 +25,18 @@ namespace Status.Data.Repositories
         {
             return await ctx.Servidores.Where(s => s.UsuarioId == userId).ToListAsync();
         }
+
+        public async Task<Servidor> GetByHostAsync(Guid usuarioId, string host)
+        {
+            return await ctx.Servidores.Where(s => s.UsuarioId == usuarioId && s.Host == host).FirstOrDefaultAsync();
+        }
+
+        public async Task<bool> Exists(Guid usuarioId, string host)
+        {
+            var servidor = await GetByHostAsync(usuarioId, host);
+
+            return (servidor != null);
+
+        }
     }
 }

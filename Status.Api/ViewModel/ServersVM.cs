@@ -18,6 +18,6 @@ namespace Status.Api.ViewModel
         public string Host { get; set; }
 
         [Required]
-        public string CheckInterval { get; set; }
+        public int CheckInterval { get; set; }
     }
 }
