@@ -14,11 +14,11 @@ namespace Status.Api.Controllers
     [Route("{controller}")]
     public class UsersController : ControllerBase
     {
-        private readonly UserRepository userRepo;
+        private readonly UserRepository _userRepo;
 
         public UsersController(UserRepository userRepo)
         {
-            this.userRepo = userRepo;
+            this._userRepo = userRepo;
         }
                 
         [HttpPost("v1/Add")]
@@ -29,17 +29,17 @@ namespace Status.Api.Controllers
                 String.IsNullOrEmpty(user.Email) || 
                 String.IsNullOrEmpty(user.Senha))
             {
-                return BadRequest("Faltam campos obrigatórios");
+                return BadRequest(new ReturnErrorVM { ErrorMessage = "Faltam campos obrigatórios" });
             }
 
             // VERIFICA SE O E-MAIL JÁ ESTÁ CADASTRADO
-            var checkUser = await userRepo.GetByEmailAsync(user.Email);
+            var checkUser = await _userRepo.GetByEmailAsync(user.Email);
             if (checkUser != null)
             {
-                return BadRequest("E-mail já cadastrado.");
+                return BadRequest(new ReturnErrorVM { ErrorMessage = "E-mail já cadastrado." });
             }
 
-            await userRepo.Add(new Usuario
+            await _userRepo.Add(new Usuario
             {
                 Nome = user.Nome,
                 Email = user.Email,

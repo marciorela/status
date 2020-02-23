@@ -11,14 +11,16 @@ namespace Status.Data.Repositories
     public class ServerRepository : BaseRepository
     {
         private readonly UserRepository _userRepo;
+        private readonly PortRepository _portRepo;
 
         public ServerRepository(AppDbContext ctx) : base(ctx)
         {
         }
 
-        public ServerRepository(AppDbContext ctx, UserRepository userRepo) : base(ctx)
+        public ServerRepository(AppDbContext ctx, UserRepository userRepo, PortRepository portRepo) : base(ctx)
         {
             _userRepo = userRepo;
+            _portRepo = portRepo;
         }
 
         public async Task<IEnumerable<Servidor>> ListByUserAsync(Guid userId)
@@ -31,12 +33,30 @@ namespace Status.Data.Repositories
             return await ctx.Servidores.Where(s => s.UsuarioId == usuarioId && s.Host == host).FirstOrDefaultAsync();
         }
 
-        public async Task<bool> Exists(Guid usuarioId, string host)
+        public async Task<bool> ExistsAsync(Guid usuarioId, string host)
         {
-            var servidor = await GetByHostAsync(usuarioId, host);
+            return await (ctx.Servidores.AnyAsync(c => c.UsuarioId == usuarioId && c.Host == host));
 
-            return (servidor != null);
+            //var servidor = await GetByHostAsync(usuarioId, host);
+            //return (servidor != null);
+        }
 
+        public async Task<bool> ExistsAsync(Guid serverId)
+        {
+            return await (ctx.Servidores.AnyAsync(c => c.Id == serverId));
+        }
+
+        public async Task<Guid> AddPort(Guid serverId, int portNumber)
+        {
+            var port = new Porta
+            {
+                Numero = portNumber,
+                ServidorId = serverId
+            };
+
+            await _portRepo.Add(port);
+
+            return port.Id;
         }
     }
 }

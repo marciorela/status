@@ -32,6 +32,7 @@ namespace Status.Api
             services.AddDbContext<AppDbContext>();
             services.AddScoped<ServerRepository>();
             services.AddScoped<UserRepository>();
+            services.AddScoped<PortRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

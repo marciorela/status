@@ -36,7 +36,7 @@ namespace Status.Api.Controllers
 
             try
             {
-                if (!await _serverRepo.Exists(server.UsuarioId, server.Host))
+                if (!await _serverRepo.ExistsAsync(server.UsuarioId, server.Host))
                 {
 
                     var novoServidor = new Servidor
@@ -47,6 +47,8 @@ namespace Status.Api.Controllers
                     };
 
                     await _serverRepo.Add(novoServidor);
+
+                    //AcceptedAtAction
 
                     return Ok(new ReturnIdVM { Id = novoServidor.Id });
                 }
@@ -61,5 +63,6 @@ namespace Status.Api.Controllers
             }
 
         }
+
     }
 }

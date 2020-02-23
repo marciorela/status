@@ -35,10 +35,5 @@ namespace Status.Data.Repositories
             await ctx.SaveChangesAsync();
 
         }
-
-        public async Task<BaseEntity> GetById(Guid Id)
-        {
-            return await ctx.FindAsync<BaseEntity>(Id);
-        }
     }
 }
