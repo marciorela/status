@@ -1,4 +1,5 @@
-﻿using Status.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Status.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,13 +8,15 @@ using System.Threading.Tasks;
 
 namespace Status.Data.Repositories
 {
-    public class BaseRepository
+    public class BaseRepository<TEntity> where TEntity : BaseEntity
     {
         protected readonly AppDbContext ctx;
+        protected readonly DbSet<TEntity> _db;
 
         public BaseRepository(AppDbContext ctx)
         {
             this.ctx = ctx;
+            _db = ctx.Set<TEntity>();
         }
 
         public async Task<Guid> Add(BaseEntity entity)
@@ -34,6 +37,11 @@ namespace Status.Data.Repositories
             ctx.Update(entity);
             await ctx.SaveChangesAsync();
 
+        }
+
+        public async Task<BaseEntity> GetByIdAsync(Guid id)
+        {
+            return await _db.FindAsync(id);
         }
     }
 }

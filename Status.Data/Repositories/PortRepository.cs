@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Status.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Status.Data.Repositories
 {
-    public class PortRepository : BaseRepository
+    public class PortRepository : BaseRepository<Porta>
     {
         public PortRepository(AppDbContext ctx) : base(ctx)
         {

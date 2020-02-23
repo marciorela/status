@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Status.Data.Repositories
 {
-    public class UserRepository : BaseRepository
+    public class UserRepository : BaseRepository<Usuario>
     {
         public UserRepository(AppDbContext ctx) : base(ctx)
         {
@@ -16,7 +16,7 @@ namespace Status.Data.Repositories
 
         public async Task<Usuario> GetByEmailAsync(string email)
         {
-            return await ctx.Usuarios.Where(u => u.Email == email).FirstOrDefaultAsync();
+            return await _db.Where(u => u.Email == email).FirstOrDefaultAsync();
         }
     }
 }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Status.Data.Repositories
 {
-    public class ServerRepository : BaseRepository
+    public class ServerRepository : BaseRepository<Servidor>
     {
         private readonly UserRepository _userRepo;
         private readonly PortRepository _portRepo;
