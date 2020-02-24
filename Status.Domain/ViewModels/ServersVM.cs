@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Status.Api.ViewModel
+namespace Status.Domain.ViewModels
 {
     public class ServersVM
     {

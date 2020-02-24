@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Status.Api.ViewModel;
+using Status.Domain.ViewModels;
 using Status.Data.Repositories;
 using System;
 using System.Collections.Generic;

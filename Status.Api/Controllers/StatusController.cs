@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Status.Data.Repositories;
 using Status.Domain.Entities;
 
 namespace Status.Api.Controllers
@@ -19,12 +18,10 @@ namespace Status.Api.Controllers
         //};
 
         private readonly ILogger<StatusController> _logger;
-        private readonly ServerRepository _serverRepo;
 
-        public StatusController(ILogger<StatusController> logger, ServerRepository serverRepo)
+        public StatusController(ILogger<StatusController> logger)
         {
             _logger = logger;
-            _serverRepo = serverRepo;
         }
 
         //public IEnumerable<WeatherForecast> GetServers()

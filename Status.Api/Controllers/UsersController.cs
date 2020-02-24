@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Status.Api.ViewModel;
+using MR.String;
+using Status.Domain.ViewModels;
 using Status.Data.Repositories;
 using Status.Domain.Entities;
 using System;
@@ -43,11 +44,22 @@ namespace Status.Api.Controllers
             {
                 Nome = user.Nome,
                 Email = user.Email,
-                Senha = user.Senha
+                Senha = user.Senha.Encrypt()
             });
 
             return Ok();
         }
 
+        [HttpPost("v1/Authenticate")]
+        public async Task<ReturnIdVM> Authenticate(SignInVM signin)
+        {
+            var user = await _userRepo.GetByEmailAsync(signin.Email) ;
+            if (user == null || user != null && user.Senha != signin.Senha.Encrypt())
+            {
+                return null;
+            }
+
+            return new ReturnIdVM { Id = user.Id };
+        }
     }
 }

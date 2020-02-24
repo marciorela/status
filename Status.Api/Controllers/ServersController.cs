@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Status.Api.ViewModel;
+using Status.Domain.ViewModels;
 using Status.Data.Repositories;
 using Status.Domain.Entities;
 using System;
