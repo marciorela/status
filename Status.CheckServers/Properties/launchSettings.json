@@ -1,0 +1,10 @@
+﻿{
+  "profiles": {
+    "Status.CheckServers": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

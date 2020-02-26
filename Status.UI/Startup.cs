@@ -27,6 +27,7 @@ namespace Status.UI
         {
             services.AddControllersWithViews();
             services.AddScoped<UserService>();
+            services.AddScoped<ServerService>();
 
             services.AddAuthentication(options => {
                 options.DefaultAuthenticateScheme =

@@ -30,6 +30,12 @@ namespace Status.Api.Controllers
             return await _serverRepo.ListByUserAsync(user);
         }
 
+        [HttpGet("v1/ListAll")]
+        public async Task<IEnumerable<ServersAllVM>> ListAll()
+        {
+            return await _serverRepo.ListAllServersAsync();
+        }
+
         [HttpPost("v1/Add")]
         public async Task<IActionResult> Add(ServersVM server)
         {

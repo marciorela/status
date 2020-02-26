@@ -20,4 +20,19 @@ namespace Status.Domain.ViewModels
         [Required]
         public int CheckInterval { get; set; }
     }
+
+    public class ServersAllVM
+    {
+        public Guid UserId { get; set; }
+
+        public Guid ServerId { get; set; }
+
+        public string Host { get; set; }
+
+        public int Port { get; set; }
+
+        public int CheckInterval { get; set; }
+
+        public DateTime LastChecked { get; set; }
+    }
 }

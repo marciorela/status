@@ -1,26 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Authentication;
-using MR.String;
-using System;
-using System.Collections.Generic;
-using System.Security.Claims;
+﻿using Status.Domain.ViewModels;
 using System.Threading.Tasks;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using Newtonsoft.Json;
-using System.Text;
-using Status.Domain.ViewModels;
 
 namespace Status.Service
 {
-    public class UserService
+    public class UserService : BaseService
     {
 
         public async Task<ReturnIdVM> CheckAuthenticationAsync(string email, string password)
         {
-            using var client = new HttpClient()
+            return await PostAsync<ReturnIdVM>("/users/v1/authenticate/", new SignInVM { Email = email, Senha = password });
+
+            /*
+                using var client = new HttpClient()
             {
                 BaseAddress = new Uri("https://localhost:5001/users/")
             };
@@ -45,6 +36,8 @@ namespace Status.Service
             }
 
             return id;
+   */
+
         }
     }
 }

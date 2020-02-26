@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Status.Domain.Entities;
+using Status.Domain.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +32,33 @@ namespace Status.Data.Repositories
         public async Task<Servidor> GetByHostAsync(Guid usuarioId, string host)
         {
             return await ctx.Servidores.Where(s => s.UsuarioId == usuarioId && s.Host == host).FirstOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<ServersAllVM>> ListAllServersAsync()
+        {
+            var list = await ctx.Servidores
+                .Include(p => p.Portas)
+                .ToListAsync();
+
+            var resultList = new List<ServersAllVM>();
+            foreach (var item in list)
+            {
+                foreach (var port in item.Portas)
+                {
+                    resultList.Add(
+                        new ServersAllVM
+                        {
+                            UserId = item.UsuarioId,
+                            ServerId = item.Id,
+                            Host = item.Host,
+                            CheckInterval = item.CheckInterval,
+                            Port = port.Numero
+                        }
+                    );
+                }
+            }
+
+            return resultList;
         }
 
         public async Task<bool> ExistsAsync(Guid usuarioId, string host)
