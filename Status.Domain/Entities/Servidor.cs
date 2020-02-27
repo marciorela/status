@@ -16,9 +16,6 @@ namespace Status.Domain.Entities
 
         //public string Descricao { get; set; }
 
-        [Required]
-        public int CheckInterval { get; set; }
-
         [Required] // FK -> USUARIO
         public Guid UsuarioId { get; set; }
         public Usuario Usuario { get; set; }

@@ -14,7 +14,7 @@ namespace Status.Domain.Entities
 
         [Required]
         public DateTime DataInc { get; set; } = DateTime.Now;
-        
+
         [Required]
         public DateTime DataAlt { get; set; } = DateTime.Now;
     }

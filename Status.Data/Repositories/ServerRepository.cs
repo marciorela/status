@@ -51,8 +51,9 @@ namespace Status.Data.Repositories
                             UserId = item.UsuarioId,
                             ServerId = item.Id,
                             Host = item.Host,
-                            CheckInterval = item.CheckInterval,
-                            Port = port.Numero
+                            CheckInterval = port.CheckInterval,
+                            Port = port.Numero,
+                            PortId = port.Id
                         }
                     );
                 }
@@ -74,12 +75,14 @@ namespace Status.Data.Repositories
             return await (ctx.Servidores.AnyAsync(c => c.Id == serverId));
         }
 
-        public async Task<Guid> AddPort(Guid serverId, int portNumber)
+        public async Task<Guid> AddPort(Guid serverId, int portNumber, int checkInterval)
         {
             var port = new Porta
             {
                 Numero = portNumber,
-                ServidorId = serverId
+                ServidorId = serverId,
+                CheckInterval = checkInterval,
+                Active = true
             };
 
             await _portRepo.Add(port);

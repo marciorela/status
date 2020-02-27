@@ -15,6 +15,24 @@
     <Compile Remove="Migrations\20200216143652_inicial.Designer.cs" />
     <Compile Remove="Migrations\20200216143811_inicial.cs" />
     <Compile Remove="Migrations\20200216143811_inicial.Designer.cs" />
+    <Compile Remove="Migrations\20200216144952_inicial.cs" />
+    <Compile Remove="Migrations\20200216144952_inicial.Designer.cs" />
+    <Compile Remove="Migrations\20200227003824_LogChecked.cs" />
+    <Compile Remove="Migrations\20200227003824_LogChecked.Designer.cs" />
+    <Compile Remove="Migrations\20200227004034_LogChecked.cs" />
+    <Compile Remove="Migrations\20200227004034_LogChecked.Designer.cs" />
+    <Compile Remove="Migrations\20200227011519_LogChecked.cs" />
+    <Compile Remove="Migrations\20200227011519_LogChecked.Designer.cs" />
+    <Compile Remove="Migrations\20200227011752_LogChecked.cs" />
+    <Compile Remove="Migrations\20200227011752_LogChecked.Designer.cs" />
+    <Compile Remove="Migrations\20200227123144_Inicial.cs" />
+    <Compile Remove="Migrations\20200227123144_Inicial.Designer.cs" />
+    <Compile Remove="Migrations\20200227163454_LogChecked_PortNumber.cs" />
+    <Compile Remove="Migrations\20200227163454_LogChecked_PortNumber.Designer.cs" />
+    <Compile Remove="Migrations\20200227163910_LogChecked.cs" />
+    <Compile Remove="Migrations\20200227163910_LogChecked.Designer.cs" />
+    <Compile Remove="Migrations\20200227170716_Inical.cs" />
+    <Compile Remove="Migrations\20200227170716_Inical.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

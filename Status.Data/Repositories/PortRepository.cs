@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Status.Domain.Entities;
+using Status.Domain.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,11 @@ namespace Status.Data.Repositories
         public async Task<bool> ExistsAsync(Guid serverId, int port)
         {
             return await ctx.PortasServidor.AnyAsync(p => p.ServidorId == serverId && p.Numero == port);
+        }
+
+        public async Task<bool> ExistsAsync(Guid portId)
+        {
+            return await _db.AnyAsync(p => p.Id == portId);
         }
     }
 }

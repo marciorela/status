@@ -10,6 +10,7 @@ namespace Status.Data
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Porta> PortasServidor { get; set; }
         public DbSet<Servidor> Servidores { get; set; }
+        public DbSet<LogChecked> LogsChecked { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

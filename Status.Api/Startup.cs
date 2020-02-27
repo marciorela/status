@@ -33,6 +33,7 @@ namespace Status.Api
             services.AddScoped<ServerRepository>();
             services.AddScoped<UserRepository>();
             services.AddScoped<PortRepository>();
+            services.AddScoped<LogCheckedRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

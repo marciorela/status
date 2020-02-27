@@ -11,5 +11,8 @@ namespace Status.Domain.ViewModels
         public Guid ServerId { get; set; }
 
         public int Port { get; set; }
+
+        public int CheckInterval { get; set; }
+
     }
 }

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Status.Domain.Entities;
 
 namespace Status.Api.Controllers
 {
@@ -15,11 +16,13 @@ namespace Status.Api.Controllers
     {
         private readonly ServerRepository _repoServer;
         private readonly PortRepository _repoPort;
+        private readonly LogCheckedRepository repoLog;
 
-        public PortsController(ServerRepository repoServer, PortRepository repoPort)
+        public PortsController(ServerRepository repoServer, PortRepository repoPort, LogCheckedRepository repoLog)
         {
             _repoServer = repoServer;
-            _repoPort   = repoPort;
+            _repoPort = repoPort;
+            this.repoLog = repoLog;
         }
 
         [HttpPost("v1/Add")]
@@ -37,7 +40,7 @@ namespace Status.Api.Controllers
                     throw new Exception("Porta já existe.");
                 }
 
-                return (Ok(new ReturnIdVM { Id = await _repoServer.AddPort(port.ServerId, port.Port) }));
+                return (Ok(new ReturnIdVM { Id = await _repoServer.AddPort(port.ServerId, port.Port, port.CheckInterval) }));
 
             }
             catch (Exception e)
@@ -45,6 +48,33 @@ namespace Status.Api.Controllers
                 return BadRequest(new ReturnErrorVM { ErrorMessage = e.Message });
             }
         }
+
+        [HttpPost("v1/Checked")]
+        public async Task<IActionResult> Checked(PortCheckedVM portChecked)
+        {
+
+            if (!await _repoPort.ExistsAsync(portChecked.PortId))
+            {
+                return BadRequest(new ReturnErrorVM { ErrorMessage = "Porta não encontrada." });
+            }
+
+            var porta = await _repoPort.GetByIdAsync(portChecked.PortId);
+
+            var logChecked = new LogChecked
+            {
+                PortId = portChecked.PortId,
+                PortNumber = porta.Numero,
+                Obs = portChecked.Obs,
+                Status = portChecked.Status,
+                DateTimeChecked = portChecked.DataChecked
+            };
+
+            return Ok(
+                new ReturnIdVM {
+                    Id = await repoLog.AddCheckedAsync(logChecked) 
+                });
+        }
+
     }
 }
 

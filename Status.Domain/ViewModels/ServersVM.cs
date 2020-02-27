@@ -16,9 +16,6 @@ namespace Status.Domain.ViewModels
 
         [Required]
         public string Host { get; set; }
-
-        [Required]
-        public int CheckInterval { get; set; }
     }
 
     public class ServersAllVM
@@ -26,6 +23,8 @@ namespace Status.Domain.ViewModels
         public Guid UserId { get; set; }
 
         public Guid ServerId { get; set; }
+
+        public Guid PortId { get; set; }
 
         public string Host { get; set; }
 
@@ -35,4 +34,6 @@ namespace Status.Domain.ViewModels
 
         public DateTime LastChecked { get; set; }
     }
+
 }
+

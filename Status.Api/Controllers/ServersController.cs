@@ -48,8 +48,7 @@ namespace Status.Api.Controllers
                     var novoServidor = new Servidor
                     {
                         UsuarioId = server.UsuarioId,
-                        Host = server.Host,
-                        CheckInterval = server.CheckInterval
+                        Host = server.Host
                     };
 
                     await _serverRepo.Add(novoServidor);
@@ -69,6 +68,6 @@ namespace Status.Api.Controllers
             }
 
         }
-
+        
     }
 }

@@ -15,5 +15,14 @@ namespace Status.Service
             return await GetAsync<IEnumerable<ServersAllVM>>("/Servers/v1/ListAll", "");
         }
 
+        public async Task<ReturnIdVM> LogStatusAsync(PortCheckedVM portCheckedVM)
+        {
+            return await PostAsync<ReturnIdVM>("/Ports/v1/Checked", portCheckedVM);
+        }
+
+        public ReturnIdVM LogStatus(PortCheckedVM portCheckedVM)
+        {
+            return Task.Run(async () => await PostAsync<ReturnIdVM>("/Ports/v1/Checked", portCheckedVM)).Result;
+        }
     }
 }

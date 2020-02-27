@@ -12,6 +12,12 @@ namespace Status.Domain.Entities
         [Required]
         public int Numero { get; set; }
 
+        [Required]
+        public bool Active { get; set; }
+
+        [Required]
+        public int CheckInterval { get; set; }
+
         [Required]  //FK -> SERVIDOR
         public Guid ServidorId { get; set; }
         public Servidor Servidor { get; set; }

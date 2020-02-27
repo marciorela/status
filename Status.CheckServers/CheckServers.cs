@@ -23,8 +23,10 @@ namespace Status.CheckServers
             this.svcServer = svcServer.Value;
         }
 
-        private void TestPort(ServersAllVM server)
+        public void ThreadTestPort(object data)
         {
+            var server = (ServersAllVM)data;
+
             _logger.LogInformation($"{DateTime.Now}: Verificando {server.Host}, porta {server.Port}...");
 
             using (TcpClient tcpClient = new TcpClient())
@@ -34,25 +36,22 @@ namespace Status.CheckServers
                 try
                 {
                     tcpClient.Connect(server.Host, server.Port);
-                    //                        await tcpClient.ConnectAsync(server.Host, server.Port);
+                    //await tcpClient.ConnectAsync(server.Host, server.Port);
+
+                    svcServer.LogStatus(new PortCheckedVM { PortId = server.PortId, Status = true });
+                    tcpClient.Close();
+
                     _logger.LogInformation($"{DateTime.Now}: Serviço {server.Host}:{server.Port} disponível.");
 
-                    tcpClient.Close();
                 }
                 catch (Exception e)
                 {
+                    svcServer.LogStatus(new PortCheckedVM { PortId = server.PortId, Status = false, Obs = e.Message });
                     _logger.LogWarning($"{DateTime.Now}: Não foi possível acessar o serviço {server.Host}:{server.Port}.");
                 }
 
                 //                    server.LastChecked = DateTime.Now;
             }
-        }
-
-        public void ThreadTestPort(object data)
-        {
-            var server = (ServersAllVM)data;
-
-            TestPort(server);
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -70,28 +69,20 @@ namespace Status.CheckServers
                         listServer = await svcServer.ListAllAsync();
                         lastReadList = DateTime.Now;
                     }
-
-                    /*
-                    Parallel.ForEach(listServer, (server) =>
-                    {
-                        TestPort(server);
-                    });
-                    */
-
-                    foreach (var server in listServer)
-                    {
-                        if ((DateTime.Now - server.LastChecked).TotalSeconds >= server.CheckInterval)
-                        {
-                            Thread t = new Thread(ThreadTestPort);
-                            t.Start(server);
-                            server.LastChecked = DateTime.Now;
-                        }
-                    }
-
                 }
                 catch (Exception e)
                 {
                     _logger.LogError($"Erro buscando lista...\n{e.Message}");
+                }
+
+                foreach (var server in listServer)
+                {
+                    if ((DateTime.Now - server.LastChecked).TotalSeconds >= server.CheckInterval)
+                    {
+                        Thread t = new Thread(ThreadTestPort);
+                        t.Start(server);
+                        server.LastChecked = DateTime.Now;
+                    }
                 }
 
                 await Task.Delay(1000, stoppingToken);

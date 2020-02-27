@@ -39,7 +39,7 @@ namespace Status.Data.Repositories
 
         }
 
-        public async Task<BaseEntity> GetByIdAsync(Guid id)
+        public async Task<TEntity> GetByIdAsync(Guid id)
         {
             return await _db.FindAsync(id);
         }

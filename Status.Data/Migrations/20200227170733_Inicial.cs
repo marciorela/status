@@ -3,10 +3,26 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Status.Data.Migrations
 {
-    public partial class inicial : Migration
+    public partial class Inicial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "LogsChecked",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    PortId = table.Column<Guid>(nullable: false),
+                    PortNumber = table.Column<int>(nullable: false),
+                    DateTimeChecked = table.Column<DateTime>(nullable: false),
+                    Status = table.Column<bool>(nullable: false),
+                    Obs = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LogsChecked", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Usuarios",
                 columns: table => new
@@ -31,7 +47,6 @@ namespace Status.Data.Migrations
                     DataInc = table.Column<DateTime>(nullable: false),
                     DataAlt = table.Column<DateTime>(nullable: false),
                     Host = table.Column<string>(maxLength: 100, nullable: false),
-                    CheckInterval = table.Column<int>(nullable: false),
                     UsuarioId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
@@ -53,6 +68,8 @@ namespace Status.Data.Migrations
                     DataInc = table.Column<DateTime>(nullable: false),
                     DataAlt = table.Column<DateTime>(nullable: false),
                     Numero = table.Column<int>(nullable: false),
+                    Active = table.Column<bool>(nullable: false),
+                    CheckInterval = table.Column<int>(nullable: false),
                     ServidorId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
@@ -79,6 +96,9 @@ namespace Status.Data.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "LogsChecked");
+
             migrationBuilder.DropTable(
                 name: "PortasServidor");
 
