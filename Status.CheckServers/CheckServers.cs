@@ -66,7 +66,7 @@ namespace Status.CheckServers
                 {
                     if ((DateTime.Now - lastReadList).TotalSeconds > 300)
                     {
-                        listServer = await svcServer.ListAllAsync();
+                        listServer = await svcServer.ListAllPortsAsync();
                         lastReadList = DateTime.Now;
                     }
                 }

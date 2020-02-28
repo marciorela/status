@@ -30,8 +30,8 @@ namespace Status.Api.Controllers
             return await _serverRepo.ListByUserAsync(user);
         }
 
-        [HttpGet("v1/ListAll")]
-        public async Task<IEnumerable<ServersAllVM>> ListAll()
+        [HttpGet("v1/ListAllPorts")]
+        public async Task<IEnumerable<ServersAllVM>> ListAllPorts()
         {
             return await _serverRepo.ListAllServersAsync();
         }

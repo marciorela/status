@@ -10,9 +10,9 @@ namespace Status.Service
     public class ServerService : BaseService
     {
         
-        public async Task<IEnumerable<ServersAllVM>> ListAllAsync()
+        public async Task<IEnumerable<ServersAllVM>> ListAllPortsAsync()
         {
-            return await GetAsync<IEnumerable<ServersAllVM>>("/Servers/v1/ListAll", "");
+            return await GetAsync<IEnumerable<ServersAllVM>>("/Servers/v1/ListAllPorts", "");
         }
 
         public async Task<ReturnIdVM> LogStatusAsync(PortCheckedVM portCheckedVM)
@@ -22,7 +22,7 @@ namespace Status.Service
 
         public ReturnIdVM LogStatus(PortCheckedVM portCheckedVM)
         {
-            return Task.Run(async () => await PostAsync<ReturnIdVM>("/Ports/v1/Checked", portCheckedVM)).Result;
+            return Task.Run(async () => await LogStatusAsync(portCheckedVM)).Result;
         }
     }
 }

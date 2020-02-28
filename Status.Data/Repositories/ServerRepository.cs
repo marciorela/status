@@ -36,28 +36,52 @@ namespace Status.Data.Repositories
 
         public async Task<IEnumerable<ServersAllVM>> ListAllServersAsync()
         {
-            var list = await ctx.Servidores
-                .Include(p => p.Portas)
+            var list = await ctx.PortasServidor
+                .Include(s => s.Servidor)
+                .Where(p => p.Active)
                 .ToListAsync();
 
+            // ERRO 
+            //var list = await ctx.Servidores
+            //                .Include(p => p.Portas.Where(x => x.Active))
+            //                .ToListAsync();
+
             var resultList = new List<ServersAllVM>();
+
             foreach (var item in list)
             {
-                foreach (var port in item.Portas)
-                {
-                    resultList.Add(
-                        new ServersAllVM
-                        {
-                            UserId = item.UsuarioId,
-                            ServerId = item.Id,
-                            Host = item.Host,
-                            CheckInterval = port.CheckInterval,
-                            Port = port.Numero,
-                            PortId = port.Id
-                        }
-                    );
-                }
+                resultList.Add(
+                    new ServersAllVM
+                    {
+                        UserId = item.Servidor.UsuarioId,
+                        ServerId = item.ServidorId,
+                        Host = item.Servidor.Host,
+                        CheckInterval = item.CheckInterval,
+                        Port = item.Numero,
+                        PortId = item.Id
+                    }
+                );
             }
+
+            /*
+                        foreach (var item in list)
+                        {
+                            foreach (var port in item.Portas)
+                            {
+                                resultList.Add(
+                                    new ServersAllVM
+                                    {
+                                        UserId = item.UsuarioId,
+                                        ServerId = item.Id,
+                                        Host = item.Host,
+                                        CheckInterval = port.CheckInterval,
+                                        Port = port.Numero,
+                                        PortId = port.Id
+                                    }
+                                );
+                            }
+                        }
+            */
 
             return resultList;
         }
