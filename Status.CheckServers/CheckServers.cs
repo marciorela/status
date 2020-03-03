@@ -25,29 +25,35 @@ namespace Status.CheckServers
 
         public void ThreadTestPort(object data)
         {
-            var server = (ServersAllVM)data;
+            var server = (PortStatusVM)data;
 
-            _logger.LogInformation($"{DateTime.Now}: Verificando {server.Host}, porta {server.Port}...");
+            _logger.LogInformation($"{DateTime.Now}: Verificando {server.Host}, porta {server.PortNumber}...");
 
             using (TcpClient tcpClient = new TcpClient())
             {
+                // INDIFERENTE
+                // TODO: verificar outro modo para definir timeout
                 tcpClient.SendTimeout = 10;
 
+                var timeStart = DateTime.Now;
                 try
                 {
-                    tcpClient.Connect(server.Host, server.Port);
+                    tcpClient.Connect(server.Host, server.PortNumber);
+                    var totalMS = (DateTime.Now - timeStart).TotalMilliseconds;
                     //await tcpClient.ConnectAsync(server.Host, server.Port);
 
-                    svcServer.LogStatus(new PortCheckedVM { PortId = server.PortId, Status = true });
+                    svcServer.LogStatus(new PortCheckedVM { PortId = server.PortId, Status = true, TimeMS = totalMS });
                     tcpClient.Close();
 
-                    _logger.LogInformation($"{DateTime.Now}: Serviço {server.Host}:{server.Port} disponível.");
+                    _logger.LogInformation($"{DateTime.Now}: Serviço {server.Host}:{server.PortNumber} disponível.");
 
                 }
                 catch (Exception e)
                 {
-                    svcServer.LogStatus(new PortCheckedVM { PortId = server.PortId, Status = false, Obs = e.Message });
-                    _logger.LogWarning($"{DateTime.Now}: Não foi possível acessar o serviço {server.Host}:{server.Port}.");
+                    var totalMS = (DateTime.Now - timeStart).TotalMilliseconds;
+
+                    svcServer.LogStatus(new PortCheckedVM { PortId = server.PortId, Status = false, TimeMS = totalMS, Obs = e.Message });
+                    _logger.LogWarning($"{DateTime.Now}: Não foi possível acessar o serviço {server.Host}:{server.PortNumber}.");
                 }
 
                 //                    server.LastChecked = DateTime.Now;
@@ -56,7 +62,7 @@ namespace Status.CheckServers
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            IEnumerable<ServersAllVM> listServer = null;
+            IEnumerable<PortStatusVM> listServer = null;
             var lastReadList = DateTime.MinValue;
 
             _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
@@ -64,7 +70,7 @@ namespace Status.CheckServers
             {
                 try
                 {
-                    if ((DateTime.Now - lastReadList).TotalSeconds > 300)
+                    if ((DateTime.Now - lastReadList).TotalSeconds > 60)
                     {
                         listServer = await svcServer.ListAllPortsAsync();
                         lastReadList = DateTime.Now;
@@ -77,7 +83,7 @@ namespace Status.CheckServers
 
                 foreach (var server in listServer)
                 {
-                    if ((DateTime.Now - server.LastChecked).TotalSeconds >= server.CheckInterval)
+                    if (server.Active && (DateTime.Now - server.LastChecked).TotalSeconds >= server.CheckInterval)
                     {
                         Thread t = new Thread(ThreadTestPort);
                         t.Start(server);

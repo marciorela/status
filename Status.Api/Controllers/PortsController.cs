@@ -57,14 +57,13 @@ namespace Status.Api.Controllers
             {
                 return BadRequest(new ReturnErrorVM { ErrorMessage = "Porta não encontrada." });
             }
-
-            var porta = await _repoPort.GetByIdAsync(portChecked.PortId);
+            //var porta = await _repoPort.GetByIdAsync(portChecked.PortId);
 
             var logChecked = new LogChecked
             {
                 PortId = portChecked.PortId,
-                PortNumber = porta.Numero,
                 Obs = portChecked.Obs,
+                TimeMS = portChecked.TimeMS,
                 Status = portChecked.Status,
                 DateTimeChecked = portChecked.DataChecked
             };

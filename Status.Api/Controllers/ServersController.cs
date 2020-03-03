@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Status.Service;
 
 namespace Status.Api.Controllers
 {
@@ -24,16 +25,16 @@ namespace Status.Api.Controllers
             this._serverRepo = serverRepo;
         }
 
-        [HttpGet("v1/List")]
-        public async Task<IEnumerable<Servidor>> List(Guid user)
+        [HttpGet("v1/ListByUser")]
+        public async Task<IEnumerable<PortStatusVM>> List(Guid user)
         {
-            return await _serverRepo.ListByUserAsync(user);
+            return await _serverRepo.ListByUserIdAsync(user);
         }
 
         [HttpGet("v1/ListAllPorts")]
-        public async Task<IEnumerable<ServersAllVM>> ListAllPorts()
+        public async Task<IEnumerable<PortStatusVM>> ListAllPorts()
         {
-            return await _serverRepo.ListAllServersAsync();
+            return await _serverRepo.ListAllPortsAsync();
         }
 
         [HttpPost("v1/Add")]

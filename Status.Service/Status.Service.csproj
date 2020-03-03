@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Lib\MR.Utils\MR.String\MR.String.csproj" />
+    <ProjectReference Include="..\Status.Data\Status.Data.csproj" />
     <ProjectReference Include="..\Status.Domain\Status.Domain.csproj" />
   </ItemGroup>
 

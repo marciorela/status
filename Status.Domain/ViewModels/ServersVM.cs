@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Status.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -18,22 +19,29 @@ namespace Status.Domain.ViewModels
         public string Host { get; set; }
     }
 
-    public class ServersAllVM
+    public class ServerPortStatusVM
     {
-        public Guid UserId { get; set; }
+        public Guid Id { get; set; }
 
+        public int Numero { get; set; }
+
+        public bool Status { get; set; }
+    }
+
+    public class ServerPortsVM
+    {
         public Guid ServerId { get; set; }
-
-        public Guid PortId { get; set; }
 
         public string Host { get; set; }
 
-        public int Port { get; set; }
+        public string Nome { get; set; }
 
-        public int CheckInterval { get; set; }
+        public List<ServerPortStatusVM> Portas { get; set; } = new List<ServerPortStatusVM>();
 
-        public DateTime LastChecked { get; set; }
+        public int PortsOk { get; set; } = 0;
+
+        public int PortsError { get; set; } = 0;
+        public bool Status { get; set; }
     }
-
 }
 

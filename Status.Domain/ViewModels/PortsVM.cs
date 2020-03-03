@@ -27,7 +27,27 @@ namespace Status.Domain.ViewModels
         [Required]
         public bool Status { get; set; } = true;
 
+        public double TimeMS { get; set; }
+
         public string Obs { get; set; }
+    }
+
+    public class PortStatusVM
+    {
+        public Guid PortId { get; set; }
+
+        public int PortNumber { get; set; }
+
+        public string Host { get; set; }
+
+        public bool Active { get; set; }
+
+        public int CheckInterval { get; set; }
+
+        public bool Status { get; set; }
+
+        public DateTime LastChecked { get; set; }
+
     }
 
 }

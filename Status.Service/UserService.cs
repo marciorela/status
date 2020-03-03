@@ -1,11 +1,14 @@
 ﻿using Status.Domain.ViewModels;
+using System;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Status.Service
 {
     public class UserService : BaseService
     {
-
         public async Task<ReturnIdVM> CheckAuthenticationAsync(string email, string password)
         {
             return await PostAsync<ReturnIdVM>("/users/v1/authenticate/", new SignInVM { Email = email, Senha = password });
@@ -39,5 +42,6 @@ namespace Status.Service
    */
 
         }
+
     }
 }

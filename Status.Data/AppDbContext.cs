@@ -18,5 +18,11 @@ namespace Status.Data
 
             optionsBuilder.UseMySql(Config.Read("ConnectionStrings:DbMySql"));
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<LogChecked>()
+                .HasIndex(l => new { l.DateTimeChecked, l.PortId });
+        }
     }
 }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Status.Service;
 using Status.UI.Models;
 
 namespace Status.UI.Controllers
@@ -13,16 +14,22 @@ namespace Status.UI.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly ServerService _serverService;
+        private readonly AspNetUser aspNetUser;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ServerService serverService, AspNetUser aspNetUser)
         {
             _logger = logger;
+            this._serverService = serverService;
+            this.aspNetUser = aspNetUser;
         }
 
         [Authorize]
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync()
         {
-            return View();
+            var list = await _serverService.ListPortsByServerAsync(aspNetUser.Id);
+
+            return View(list);
         }
 
         public IActionResult Privacy()

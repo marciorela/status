@@ -14,7 +14,7 @@ namespace Status.Domain.Entities
         [StringLength(100)]
         public string Host { get; set; }
 
-        //public string Descricao { get; set; }
+        public string Nome { get; set; }
 
         [Required] // FK -> USUARIO
         public Guid UsuarioId { get; set; }

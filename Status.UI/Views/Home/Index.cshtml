@@ -1,6 +1,19 @@
-﻿@{
+﻿@model IEnumerable<Status.Domain.ViewModels.ServerPortsVM>
+
+@{
     ViewData["Title"] = "Home Page";
 }
+
+    <div>
+        @foreach (var item in Model)
+        {
+            <label>@item.Host</label>
+            <label>@item.Status</label>
+            <label>@item.PortsOk</label>
+            <label>@item.PortsError</label>
+            <br />
+        }
+    </div>
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>

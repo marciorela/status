@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Dapper;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Status.Domain.Entities;
 using Status.Domain.ViewModels;
 using System;
@@ -11,22 +14,52 @@ namespace Status.Data.Repositories
 {
     public class ServerRepository : BaseRepository<Servidor>
     {
-        private readonly UserRepository _userRepo;
         private readonly PortRepository _portRepo;
 
         public ServerRepository(AppDbContext ctx) : base(ctx)
         {
         }
 
-        public ServerRepository(AppDbContext ctx, UserRepository userRepo, PortRepository portRepo) : base(ctx)
+        public ServerRepository(AppDbContext ctx, PortRepository portRepo) : base(ctx)
         {
-            _userRepo = userRepo;
             _portRepo = portRepo;
         }
 
-        public async Task<IEnumerable<Servidor>> ListByUserAsync(Guid userId)
+        public async Task<IEnumerable<PortStatusVM>> ListByUserIdAsync(Guid? userId = null)
         {
-            return await ctx.Servidores.Where(s => s.UsuarioId == userId).ToListAsync();
+            var textSQL = $@"
+                select
+                  p.id as portid, p.numero as portnumber, s.host, p.active, p.checkinterval, l.datetimechecked as lastchecked, l.status
+                from usuarios u
+                inner join servidores s on
+                  s.usuarioid = u.id
+                left join portasservidor p on
+                  p.servidorid = s.id
+                left join (select l1.id, l1.portid, l1.datetimechecked, l1.status
+                           from logschecked l1
+                           where
+                             l1.id = (select l2.id from logschecked l2 where l2.portid = l1.portid order by datetimechecked desc limit 1)
+                          ) l on
+                  l.portid = p.id
+                ##
+                order by s.host, p.numero
+            ";
+
+            if (userId != null)
+            {
+                textSQL = textSQL.Replace("##", $@"
+                where
+                  u.id = '{userId}'
+                ");
+            }
+            else
+            {
+                textSQL = textSQL.Replace("##", "");
+            };
+
+            var resultList = await ctx.Database.GetDbConnection().QueryAsync<PortStatusVM>(textSQL);
+
+            return resultList;
         }
 
         public async Task<Servidor> GetByHostAsync(Guid usuarioId, string host)
@@ -34,54 +67,9 @@ namespace Status.Data.Repositories
             return await ctx.Servidores.Where(s => s.UsuarioId == usuarioId && s.Host == host).FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<ServersAllVM>> ListAllServersAsync()
+        public async Task<IEnumerable<PortStatusVM>> ListAllPortsAsync()
         {
-            var list = await ctx.PortasServidor
-                .Include(s => s.Servidor)
-                .Where(p => p.Active)
-                .ToListAsync();
-
-            // ERRO 
-            //var list = await ctx.Servidores
-            //                .Include(p => p.Portas.Where(x => x.Active))
-            //                .ToListAsync();
-
-            var resultList = new List<ServersAllVM>();
-
-            foreach (var item in list)
-            {
-                resultList.Add(
-                    new ServersAllVM
-                    {
-                        UserId = item.Servidor.UsuarioId,
-                        ServerId = item.ServidorId,
-                        Host = item.Servidor.Host,
-                        CheckInterval = item.CheckInterval,
-                        Port = item.Numero,
-                        PortId = item.Id
-                    }
-                );
-            }
-
-            /*
-                        foreach (var item in list)
-                        {
-                            foreach (var port in item.Portas)
-                            {
-                                resultList.Add(
-                                    new ServersAllVM
-                                    {
-                                        UserId = item.UsuarioId,
-                                        ServerId = item.Id,
-                                        Host = item.Host,
-                                        CheckInterval = port.CheckInterval,
-                                        Port = port.Numero,
-                                        PortId = port.Id
-                                    }
-                                );
-                            }
-                        }
-            */
+            var resultList = await ListByUserIdAsync();
 
             return resultList;
         }

@@ -40,14 +40,14 @@ namespace Status.Api.Controllers
                 return BadRequest(new ReturnErrorVM { ErrorMessage = "E-mail já cadastrado." });
             }
 
-            await _userRepo.Add(new Usuario
+            var usuarioId = await _userRepo.Add(new Usuario
             {
                 Nome = user.Nome,
                 Email = user.Email,
                 Senha = user.Senha.Encrypt()
             });
 
-            return Ok();
+            return Ok(new ReturnIdVM { Id = usuarioId });
         }
 
         [HttpPost("v1/Authenticate")]

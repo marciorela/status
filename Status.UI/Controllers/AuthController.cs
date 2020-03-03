@@ -9,17 +9,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Status.UI.Controllers
 {
     public class AuthController : Controller
     {
-        private readonly UserService svcUser;
+        private readonly UserService userService;
 
-        public AuthController(UserService svcUser)
+        public AuthController(UserService userService)
         {
-            this.svcUser = svcUser;
+            this.userService = userService;
         }
 
         [HttpGet]
@@ -29,11 +30,6 @@ namespace Status.UI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SignIn(string? returnUrl, SignInVM dados)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(dados);
-            }
-
             if (!await LoginAsync(dados.Email, dados.Senha))
             {
                 ModelState.AddModelError("","E-mail ou senha inválido.");
@@ -51,15 +47,15 @@ namespace Status.UI.Controllers
 
         public async Task<bool> LoginAsync(string email, string password)
         {
-            var user = await svcUser.CheckAuthenticationAsync(email, password);
+            var user = await userService.CheckAuthenticationAsync(email, password);
             if (user == null)
             {
                 return false;
             }
             var claims = new List<Claim>()
             {
-                new Claim("id", user.Id.ToString()),
-                new Claim("email", email)
+                new Claim(ClaimTypes.Sid, user.Id.ToString()),
+                new Claim(ClaimTypes.Email, email)
             };
 
             var identity = new ClaimsIdentity(
@@ -73,6 +69,8 @@ namespace Status.UI.Controllers
             {
                 IsPersistent = true
             });
+
+            Thread.CurrentPrincipal = principal;
 
             return true;
         }

@@ -15,13 +15,12 @@ namespace Status.Domain.Entities
         public Guid PortId { get; set; }
 
         [Required]
-        public int PortNumber { get; set; }
-
-        [Required]
         public DateTime DateTimeChecked { get; set; }
 
         [Required]
         public bool Status { get; set; }
+
+        public double TimeMS { get; set; }
 
         public string Obs { get; set; }
 
