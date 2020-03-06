@@ -17,10 +17,12 @@ namespace Status.UI.Controllers
     public class AuthController : Controller
     {
         private readonly UserService userService;
+        private readonly AspNetUser aspNetUser;
 
-        public AuthController(UserService userService)
+        public AuthController(UserService userService, AspNetUser aspNetUser)
         {
             this.userService = userService;
+            this.aspNetUser = aspNetUser;
         }
 
         [HttpGet]
@@ -32,7 +34,7 @@ namespace Status.UI.Controllers
         {
             if (!await LoginAsync(dados.Email, dados.Senha))
             {
-                ModelState.AddModelError("","E-mail ou senha inválido.");
+                ModelState.AddModelError("", "E-mail ou senha inválido.");
             }
 
             return Redirect(returnUrl ?? "/");
@@ -52,7 +54,14 @@ namespace Status.UI.Controllers
             {
                 return false;
             }
-            var claims = new List<Claim>()
+
+            await aspNetUser.Authenticate(user.Id, email);
+
+            //aspNetUser.SetCookie(ClaimTypes.Sid  , user.Id.ToString());
+            //aspNetUser.SetCookie(ClaimTypes.Email, email);
+
+            /*
+                var claims = new List<Claim>()
             {
                 new Claim(ClaimTypes.Sid, user.Id.ToString()),
                 new Claim(ClaimTypes.Email, email)
@@ -71,8 +80,10 @@ namespace Status.UI.Controllers
             });
 
             Thread.CurrentPrincipal = principal;
+*/
 
             return true;
         }
     }
 }
+

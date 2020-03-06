@@ -41,6 +41,7 @@ namespace Status.Domain.ViewModels
         public int PortsOk { get; set; } = 0;
 
         public int PortsError { get; set; } = 0;
+
         public bool Status { get; set; }
     }
 }
