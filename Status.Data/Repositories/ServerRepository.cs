@@ -25,7 +25,7 @@ namespace Status.Data.Repositories
             _portRepo = portRepo;
         }
 
-        public async Task<IEnumerable<PortStatusVM>> ListByUserIdAsync(Guid? userId = null)
+        public async Task<IEnumerable<PortStatusVM>> ListStatusByUserIdAsync(Guid? userId = null)
         {
             var textSQL = $@"
                 select
@@ -62,6 +62,11 @@ namespace Status.Data.Repositories
             return resultList;
         }
 
+        public async Task<IEnumerable<Servidor>> ListByUserAsync(Guid userId)
+        {
+            return await ctx.Servidores.Where(s => s.UsuarioId == userId).OrderBy(s => s.Host).ToListAsync();
+        }
+
         public async Task<Servidor> GetByHostAsync(Guid usuarioId, string host)
         {
             return await ctx.Servidores.Where(s => s.UsuarioId == usuarioId && s.Host == host).FirstOrDefaultAsync();
@@ -69,7 +74,7 @@ namespace Status.Data.Repositories
 
         public async Task<IEnumerable<PortStatusVM>> ListAllPortsAsync()
         {
-            var resultList = await ListByUserIdAsync();
+            var resultList = await ListStatusByUserIdAsync();
 
             return resultList;
         }

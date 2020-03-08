@@ -57,31 +57,6 @@ namespace Status.UI.Controllers
 
             await aspNetUser.Authenticate(user.Id, email);
 
-            //aspNetUser.SetCookie(ClaimTypes.Sid  , user.Id.ToString());
-            //aspNetUser.SetCookie(ClaimTypes.Email, email);
-
-            /*
-                var claims = new List<Claim>()
-            {
-                new Claim(ClaimTypes.Sid, user.Id.ToString()),
-                new Claim(ClaimTypes.Email, email)
-            };
-
-            var identity = new ClaimsIdentity(
-                claims,
-                CookieAuthenticationDefaults.AuthenticationScheme
-                );
-
-            var principal = new ClaimsPrincipal(identity);
-
-            await HttpContext.SignInAsync(principal, new AuthenticationProperties
-            {
-                IsPersistent = true
-            });
-
-            Thread.CurrentPrincipal = principal;
-*/
-
             return true;
         }
     }

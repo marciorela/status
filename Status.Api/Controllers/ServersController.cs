@@ -25,16 +25,22 @@ namespace Status.Api.Controllers
             this._serverRepo = serverRepo;
         }
 
-        [HttpGet("v1/ListByUser")]
+        [HttpGet("v1/ListStatusByUser")]
         public async Task<IEnumerable<PortStatusVM>> List(Guid user)
         {
-            return await _serverRepo.ListByUserIdAsync(user);
+            return await _serverRepo.ListStatusByUserIdAsync(user);
         }
 
         [HttpGet("v1/ListAllPorts")]
         public async Task<IEnumerable<PortStatusVM>> ListAllPorts()
         {
             return await _serverRepo.ListAllPortsAsync();
+        }
+
+        [HttpGet("v1/ListByUser")]
+        public async Task<IEnumerable<Servidor>> ListByUser(Guid user)
+        {
+            return await _serverRepo.ListByUserAsync(user);
         }
 
         [HttpPost("v1/Add")]

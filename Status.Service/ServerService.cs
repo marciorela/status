@@ -1,4 +1,5 @@
 ﻿using Status.Data.Repositories;
+using Status.Domain.Entities;
 using Status.Domain.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -37,41 +38,49 @@ namespace Status.Service
             return Task.Run(async () => await LogStatusAsync(portCheckedVM)).Result;
         }
 
-        public async Task<IEnumerable<PortStatusVM>> ListByUser(Guid user)
+        public async Task<IEnumerable<Servidor>> ListByUserAsync(Guid user)
         {
-            return await GetAsync<IEnumerable<PortStatusVM>>("/Servers/v1/ListByUser", $"user={user}");
+            return await GetAsync<IEnumerable<Servidor>>("/Servers/v1/ListByUser", $"user={user}");
+        }
+
+        public async Task<IEnumerable<PortStatusVM>> ListStatusByUserAsync(Guid user)
+        {
+            return await GetAsync<IEnumerable<PortStatusVM>>("/Servers/v1/ListStatusByUser", $"user={user}");
         }
 
         public async Task<IEnumerable<ServerPortsVM>> ListPortsByServerAsync(Guid userId)
         {
             var resultlist = new List<ServerPortsVM>();
             var lastHost = "";
-            var list = await ListByUser(userId);
-            foreach (var item in list)
+            var list = await ListStatusByUserAsync(userId);
+            if (list != null)
             {
-                if (lastHost != item.Host)
+                foreach (var item in list)
                 {
-                    resultlist.Add(new ServerPortsVM
+                    if (lastHost != item.Host)
                     {
-                        Host = item.Host                        
+                        resultlist.Add(new ServerPortsVM
+                        {
+                            Host = item.Host
+                        });
+                    }
+                    lastHost = item.Host;
+
+                    resultlist.Last().Portas.Add(new ServerPortStatusVM
+                    {
+                        Id = item.PortId,
+                        Numero = item.PortNumber,
+                        Status = item.Status
                     });
-                }
-                lastHost = item.Host;
 
-                resultlist.Last().Portas.Add(new ServerPortStatusVM
-                {
-                    Id = item.PortId,
-                    Numero = item.PortNumber,
-                    Status = item.Status                    
-                });
-
-                if (item.Status)
-                {
-                    resultlist.Last().PortsOk++;
-                }
-                else
-                {
-                    resultlist.Last().PortsError++;
+                    if (item.Status)
+                    {
+                        resultlist.Last().PortsOk++;
+                    }
+                    else
+                    {
+                        resultlist.Last().PortsError++;
+                    }
                 }
             }
 

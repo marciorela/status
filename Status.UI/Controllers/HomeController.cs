@@ -25,7 +25,7 @@ namespace Status.UI.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> IndexAsync()
+        public async Task<IActionResult> Index()
         {
             var list = await _serverService.ListPortsByServerAsync(aspNetUser.Id);
 
