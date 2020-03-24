@@ -17,7 +17,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Lib\MR.Utils\MR.String\MR.String.csproj" />
-    <ProjectReference Include="..\Status.Api\Status.Api.csproj" />
     <ProjectReference Include="..\Status.Domain\Status.Domain.csproj" />
     <ProjectReference Include="..\Status.Service\Status.Service.csproj" />
   </ItemGroup>

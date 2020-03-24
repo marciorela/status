@@ -3,7 +3,10 @@ using Status.Domain.Entities;
 using Status.Domain.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
+using System.Net.Sockets;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -85,6 +88,84 @@ namespace Status.Service
             }
 
             return resultlist;
+        }
+
+        private async Task<Guid> AddServer(Guid UserId, ServersVM server)
+        {
+            var id = await PostAsync<ReturnIdVM>("/Servers/v1/Add", new ServersVM
+            {
+                Host = server.Host,
+                Nome = server.Nome,
+                UsuarioId = UserId
+            });
+
+            return id.Id;
+        }
+
+        private async Task<Guid> EditServer(Guid userId, ServersVM server)
+        {
+            var id = await PostAsync<ReturnIdVM>("/Servers/v1/Update", new ServersVM
+            {
+                Id = server.Id,
+                Host = server.Host,
+                Nome = server.Nome,
+                UsuarioId = userId
+            });
+
+            return id.Id;
+        }
+
+        public async Task<Servidor> GetByHost(Guid userId, string host)
+        {
+            return await GetAsync<Servidor>("/Servers/v1/GetByHost", $"user={userId}&host={host}");
+        }
+
+        public async Task<Porta> GetPort(Guid idServer, int portNumber)
+        {
+            return await GetAsync<Porta>("/Servers/v1/GetPort", $"server={idServer}&port={portNumber}");
+        }
+
+        public async Task<Guid> AddOrEditServer(ServerEditVM server)
+        {
+            Guid id;
+
+            var checkServer = await GetByHost(server.UserId, server.Host);
+            if (checkServer == null)
+            {
+                id = await AddServer(server.UserId, new ServersVM
+                {
+                    Host = server.Host,
+                    Nome = server.Nome,
+                    UsuarioId = server.UserId
+                });
+
+            }
+            else
+            {
+                id = await EditServer(server.UserId, new ServersVM
+                {
+                    Id = checkServer.Id,
+                    Host = server.Host,
+                    Nome = server.Nome,
+                    UsuarioId = server.UserId
+                });
+            }
+
+            var ports = server.Portas.Split(',');
+            foreach (var portNumber in ports)
+            {
+                var port = GetPort(id, Convert.ToInt32(portNumber));
+                if (port == null)
+                {
+                    await PostAsync<ReturnIdVM>("/Ports/v1/Add", new PortAddVM
+                    {
+                        ServerId = id,
+                        Port = Convert.ToInt32(port)
+                    });
+                }
+            }
+
+            return id;
         }
     }
 }

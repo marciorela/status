@@ -13,6 +13,9 @@ namespace Status.Domain.ViewModels
         public Guid Id { get; set; } = new Guid();
 
         [Required]
+        public string Nome { get; set; }
+
+        [Required]
         public Guid UsuarioId { get; set; }
 
         [Required]
@@ -43,6 +46,22 @@ namespace Status.Domain.ViewModels
         public int PortsError { get; set; } = 0;
 
         public bool Status { get; set; }
+    }
+
+    public class ServerEditVM
+    {
+        public Guid Id { get; set; }
+
+        [Required]
+        public Guid UserId { get; set; }
+
+        [Required(ErrorMessage = "Host deve ser informado")]
+        public string Host { get; set; }
+
+        [Required(ErrorMessage = "Nome do servidor deve ser informado")]
+        public string Nome { get; set; }
+
+        public string Portas { get; set; }
     }
 }
 

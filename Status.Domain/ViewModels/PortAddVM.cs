@@ -12,7 +12,7 @@ namespace Status.Domain.ViewModels
 
         public int Port { get; set; }
 
-        public int CheckInterval { get; set; }
+        public int CheckInterval { get; set; } = 60;
 
     }
 }

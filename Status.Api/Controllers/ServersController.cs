@@ -43,6 +43,12 @@ namespace Status.Api.Controllers
             return await _serverRepo.ListByUserAsync(user);
         }
 
+        [HttpGet("v1/GetByHost")]
+        public async Task<Servidor> GetByHost(Guid userId, string host)
+        {
+            return await _serverRepo.GetByHostAsync(userId, host);
+        }
+
         [HttpPost("v1/Add")]
         public async Task<IActionResult> Add(ServersVM server)
         {
@@ -52,17 +58,17 @@ namespace Status.Api.Controllers
                 if (!await _serverRepo.ExistsAsync(server.UsuarioId, server.Host))
                 {
 
-                    var novoServidor = new Servidor
-                    {
-                        UsuarioId = server.UsuarioId,
-                        Host = server.Host
-                    };
-
-                    await _serverRepo.Add(novoServidor);
-
                     //AcceptedAtAction
 
-                    return Ok(new ReturnIdVM { Id = novoServidor.Id });
+                    return Ok(new ReturnIdVM
+                    {
+                        Id = await _serverRepo.Add(new Servidor
+                        {
+                            UsuarioId = server.UsuarioId,
+                            Nome = server.Nome,
+                            Host = server.Host
+                        })
+                    });
                 }
                 else
                 {
@@ -75,6 +81,28 @@ namespace Status.Api.Controllers
             }
 
         }
-        
+
+        [HttpPost("v1/Update")]
+        public async Task<IActionResult> Edit(ServersVM server)
+        {
+            try
+            {
+                await _serverRepo.Update(new Servidor
+                {
+                    Id = server.Id,
+                    Host = server.Host,
+                    Nome = server.Nome,
+                    UsuarioId = server.UsuarioId
+                });
+
+                return Ok(new ReturnIdVM { Id = server.Id });
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new ReturnErrorVM { ErrorMessage = $"Ocorreu um erro inesperado: {e.Message}" });
+            }
+        }
+
+
     }
 }

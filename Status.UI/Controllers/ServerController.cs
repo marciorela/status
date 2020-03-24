@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Status.Data.Repositories;
+using Status.Domain.Entities;
+using Status.Domain.ViewModels;
 using Status.Service;
 using System;
 using System.Collections.Generic;
@@ -14,7 +16,7 @@ namespace Status.UI.Controllers
         private readonly ServerService serverService;
         private readonly AspNetUser aspNetUser;
 
-        public ServerController(ServerService serverRepo, Service.AspNetUser aspNetUser)
+        public ServerController(ServerService serverRepo, AspNetUser aspNetUser)
         {
             this.serverService = serverRepo;
             this.aspNetUser = aspNetUser;
@@ -27,5 +29,23 @@ namespace Status.UI.Controllers
 
             return View(listServer);
         }
+
+        [HttpGet]
+        public IActionResult Create() => View();
+
+        [HttpPost]
+        public async Task<IActionResult> Create(ServerEditVM servidor)
+        {
+            servidor.UserId = aspNetUser.Id;
+
+            if (!ModelState.IsValid)
+            {
+                return View(servidor);
+            }
+            await serverService.AddOrEditServer(servidor);
+
+            return RedirectToAction("Index");
+        }
+
     }
 }
